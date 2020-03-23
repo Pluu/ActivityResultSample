@@ -3,7 +3,9 @@ package com.pluu.sample.activityresult
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.widget.LinearLayout
 import android.widget.LinearLayout.VERTICAL
 import androidx.activity.prepareCall
@@ -14,11 +16,11 @@ import androidx.appcompat.app.AppCompatActivity
 
 class ActivityResultSampleActivity : AppCompatActivity() {
 
-    val second = prepareCall(StartActivityForResult()) { activityResult ->
+    val requestActivity = prepareCall(StartActivityForResult()) { activityResult ->
         actionResultData(activityResult)
     }
 
-    val secondVanilla =
+    val requestSecondVanilla =
         prepareCall(object : ActivityResultContract<Void, ActivityResult>() {
             override fun createIntent(input: Void?): Intent {
                 return Intent(this@ActivityResultSampleActivity, ResultSecondActivity::class.java)
@@ -78,6 +80,14 @@ class ActivityResultSampleActivity : AppCompatActivity() {
         }
     }
 
+    // TODO: RequestPermission이 활성화된 후 isGranted 결과 미취득
+    // TODO: In Activity-1.2.0-alpha02, Fragment-1.3.0-alpha02
+    val requestPermission = prepareCall(RequestPermission()) { isGranted ->
+        toast("Location granted: $isGranted")
+    }
+
+    // TODO: RequestPermission이 활성화된 후 isGranted 결과 미취득
+    // TODO: In Activity-1.2.0-alpha02, Fragment-1.3.0-alpha02
     val requestLocation = prepareCall(RequestPermission(), ACCESS_FINE_LOCATION) { isGranted ->
         toast("Location granted: $isGranted")
     }
@@ -99,16 +109,25 @@ class ActivityResultSampleActivity : AppCompatActivity() {
                 orientation = VERTICAL
                 button("Show second Activity") {
                     val intent = Intent(context, ResultSecondActivity::class.java)
-                    second.launch(intent)
+                    requestActivity.launch(intent)
                 }
                 button("Show second Activity (Vanilla)") {
-                    secondVanilla.launch(null)
+                    requestSecondVanilla.launch(null)
                 }
                 button("Show second Activity (Custom Result)") {
                     secondCustom.launch(null)
                 }
                 button("Request location permission") {
                     requestLocation()
+                }
+                button("Request location permission (Vanilla)") {
+                    requestPermission.launch(ACCESS_FINE_LOCATION)
+                }
+                button("Go Detail Setting") {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                        data = Uri.fromParts("package", packageName, null)
+                    }
+                    requestActivity.launch(intent)
                 }
                 button("Take pic") {
                     takePicture.launch(null)
