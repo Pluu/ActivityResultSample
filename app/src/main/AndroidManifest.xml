@@ -11,8 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
-            android:name=".ActivityResultSampleActivity"
-            android:label="@string/app_name">
+            android:name=".ActivityResultSampleActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ResultSecondActivity" />
+        <activity android:name=".ActivityResultSampleFragmentActivity" />
     </application>
 
 </manifest>

@@ -17,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 class ActivityResultSampleActivity : AppCompatActivity() {
 
     val requestActivity = prepareCall(StartActivityForResult()) { activityResult ->
-        actionResultData(activityResult)
+        toast(activityResult.prettyString)
     }
 
     val requestSecondVanilla =
@@ -31,32 +31,8 @@ class ActivityResultSampleActivity : AppCompatActivity() {
                 return ActivityResult(resultCode, intent)
             }
         }) { activityResult ->
-            actionResultData(activityResult)
+            toast(activityResult.prettyString)
         }
-
-    private fun actionResultData(activityResult: ActivityResult) {
-        val result = buildString {
-            val resultString = when (activityResult.resultCode) {
-                Activity.RESULT_OK -> "RESULT_OK"
-                Activity.RESULT_CANCELED -> "RESULT_CANCELED"
-                else -> "Result ${activityResult.resultCode}"
-            }
-            append("ResultCode: $resultString")
-
-            val data = activityResult.data?.extras?.let { bundle ->
-                bundle.keySet()
-                    .map { it to bundle.get(it) }
-                    .joinToString()
-            }.orEmpty()
-
-            if (data.isNotEmpty()) {
-                append(System.lineSeparator())
-                append("Extra: $data")
-            }
-        }
-
-        toast(result)
-    }
 
     val secondCustom = prepareCall(object : ActivityResultContract<Void, SecondResult?>() {
         override fun createIntent(input: Void?): Intent {
@@ -123,17 +99,21 @@ class ActivityResultSampleActivity : AppCompatActivity() {
                 button("Request location permission (Vanilla)") {
                     requestPermission.launch(ACCESS_FINE_LOCATION)
                 }
-                button("Go Detail Setting") {
-                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                        data = Uri.fromParts("package", packageName, null)
-                    }
-                    requestActivity.launch(intent)
-                }
                 button("Take pic") {
                     takePicture.launch(null)
                 }
                 button("Dial 1234-5678-9012") {
                     dial.launch("1234-5678-9012")
+                }
+                button("Show fragment Sample", color = 0xFF81D4FA.toInt()) {
+                    val intent = Intent(context, ActivityResultSampleFragmentActivity::class.java)
+                    requestActivity.launch(intent)
+                }
+                button("Go Detail Setting", color = 0xFF81D4FA.toInt()) {
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                        data = Uri.fromParts("package", packageName, null)
+                    }
+                    requestActivity.launch(intent)
                 }
             }
         }
