@@ -2,6 +2,7 @@ package com.pluu.sample.activityresult
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.provider.Settings
 import android.widget.LinearLayout
 import android.widget.LinearLayout.VERTICAL
 import androidx.activity.prepareCall
+import androidx.activity.invoke
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts.*
@@ -22,8 +24,8 @@ class ActivityResultSampleActivity : AppCompatActivity() {
 
     val requestSecondVanilla =
         prepareCall(object : ActivityResultContract<Void, ActivityResult>() {
-            override fun createIntent(input: Void?): Intent {
-                return Intent(this@ActivityResultSampleActivity, ResultSecondActivity::class.java)
+            override fun createIntent(context: Context, input: Void?): Intent {
+                return Intent(context, ResultSecondActivity::class.java)
             }
 
             @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
@@ -35,8 +37,8 @@ class ActivityResultSampleActivity : AppCompatActivity() {
         }
 
     val secondCustom = prepareCall(object : ActivityResultContract<Void, SecondResult?>() {
-        override fun createIntent(input: Void?): Intent {
-            return Intent(this@ActivityResultSampleActivity, ResultSecondActivity::class.java)
+        override fun createIntent(context: Context, input: Void?): Intent {
+            return Intent(context, ResultSecondActivity::class.java)
         }
 
         @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
@@ -68,12 +70,12 @@ class ActivityResultSampleActivity : AppCompatActivity() {
         toast("Location granted: $isGranted")
     }
 
-    val takePicture = prepareCall(TakePicture()) { bitmap ->
+    val takePicture = prepareCall(TakePicturePreview()) { bitmap ->
         toast("Got picture: $bitmap")
     }
 
-    val dial = prepareCall(Dial()) { success ->
-        toast("Dial success: $success")
+    val getContent = prepareCall(GetContent()) { uri ->
+        toast("Got image: $uri")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,35 +87,35 @@ class ActivityResultSampleActivity : AppCompatActivity() {
                 orientation = VERTICAL
                 button("Show second Activity") {
                     val intent = Intent(context, ResultSecondActivity::class.java)
-                    requestActivity.launch(intent)
+                    requestActivity(intent)
                 }
                 button("Show second Activity (Vanilla)") {
-                    requestSecondVanilla.launch(null)
+                    requestSecondVanilla()
                 }
                 button("Show second Activity (Custom Result)") {
-                    secondCustom.launch(null)
+                    secondCustom()
                 }
                 button("Request location permission") {
                     requestLocation()
                 }
                 button("Request location permission (Vanilla)") {
-                    requestPermission.launch(ACCESS_FINE_LOCATION)
+                    requestPermission(ACCESS_FINE_LOCATION)
                 }
                 button("Take pic") {
-                    takePicture.launch(null)
+                    takePicture()
                 }
-                button("Dial 1234-5678-9012") {
-                    dial.launch("1234-5678-9012")
+                button("Pick an image") {
+                    getContent("image/*")
                 }
                 button("Show fragment Sample", color = 0xFF81D4FA.toInt()) {
                     val intent = Intent(context, ActivityResultSampleFragmentActivity::class.java)
-                    requestActivity.launch(intent)
+                    requestActivity(intent)
                 }
                 button("Go Detail Setting", color = 0xFF81D4FA.toInt()) {
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                         data = Uri.fromParts("package", packageName, null)
                     }
-                    requestActivity.launch(intent)
+                    requestActivity(intent)
                 }
             }
         }
