@@ -58,14 +58,10 @@ class ActivityResultSampleActivity : AppCompatActivity() {
         }
     }
 
-    // TODO: RequestPermission이 활성화된 후 isGranted 결과 미취득
-    // TODO: In Activity-1.2.0-alpha02, Fragment-1.3.0-alpha02
     val requestPermission = prepareCall(RequestPermission()) { isGranted ->
         toast("Location granted: $isGranted")
     }
 
-    // TODO: RequestPermission이 활성화된 후 isGranted 결과 미취득
-    // TODO: In Activity-1.2.0-alpha02, Fragment-1.3.0-alpha02
     val requestLocation = prepareCall(RequestPermission(), ACCESS_FINE_LOCATION) { isGranted ->
         toast("Location granted: $isGranted")
     }
