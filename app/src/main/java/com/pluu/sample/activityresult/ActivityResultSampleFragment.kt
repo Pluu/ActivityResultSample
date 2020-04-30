@@ -1,7 +1,6 @@
 package com.pluu.sample.activityresult
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +13,7 @@ import androidx.fragment.app.Fragment
 class ActivityResultSampleFragment : Fragment() {
 
     val requestActivity =
-        prepareCall(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
             toast(activityResult.prettyString)
         }
 

@@ -9,7 +9,7 @@ import android.os.Bundle
 import android.provider.Settings
 import android.widget.LinearLayout
 import android.widget.LinearLayout.VERTICAL
-import androidx.activity.prepareCall
+import androidx.activity.registerForActivityResult
 import androidx.activity.invoke
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContract
@@ -18,12 +18,12 @@ import androidx.appcompat.app.AppCompatActivity
 
 class ActivityResultSampleActivity : AppCompatActivity() {
 
-    val requestActivity = prepareCall(StartActivityForResult()) { activityResult ->
+    val requestActivity = registerForActivityResult(StartActivityForResult()) { activityResult ->
         toast(activityResult.prettyString)
     }
 
     val requestSecondVanilla =
-        prepareCall(object : ActivityResultContract<Void, ActivityResult>() {
+        registerForActivityResult(object : ActivityResultContract<Void, ActivityResult>() {
             override fun createIntent(context: Context, input: Void?): Intent {
                 return Intent(context, ResultSecondActivity::class.java)
             }
@@ -36,7 +36,7 @@ class ActivityResultSampleActivity : AppCompatActivity() {
             toast(activityResult.prettyString)
         }
 
-    val secondCustom = prepareCall(object : ActivityResultContract<Void, SecondResult?>() {
+    val secondCustom = registerForActivityResult(object : ActivityResultContract<Void, SecondResult?>() {
         override fun createIntent(context: Context, input: Void?): Intent {
             return Intent(context, ResultSecondActivity::class.java)
         }
@@ -58,19 +58,19 @@ class ActivityResultSampleActivity : AppCompatActivity() {
         }
     }
 
-    val requestPermission = prepareCall(RequestPermission()) { isGranted ->
+    val requestPermission = registerForActivityResult(RequestPermission()) { isGranted ->
         toast("Location granted: $isGranted")
     }
 
-    val requestLocation = prepareCall(RequestPermission(), ACCESS_FINE_LOCATION) { isGranted ->
+    val requestLocation = registerForActivityResult(RequestPermission(), ACCESS_FINE_LOCATION) { isGranted ->
         toast("Location granted: $isGranted")
     }
 
-    val takePicture = prepareCall(TakePicturePreview()) { bitmap ->
+    val takePicture = registerForActivityResult(TakePicturePreview()) { bitmap ->
         toast("Got picture: $bitmap")
     }
 
-    val getContent = prepareCall(GetContent()) { uri ->
+    val getContent = registerForActivityResult(GetContent()) { uri ->
         toast("Got image: $uri")
     }
 
