@@ -12,10 +12,11 @@ import androidx.fragment.app.Fragment
 
 class ActivityResultSampleFragment : Fragment() {
 
-    val requestActivity =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
-            toast(activityResult.prettyString)
-        }
+    val requestActivity = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { activityResult ->
+        toast(activityResult.prettyString)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -9,8 +9,8 @@ import android.os.Bundle
 import android.provider.Settings
 import android.widget.LinearLayout
 import android.widget.LinearLayout.VERTICAL
-import androidx.activity.registerForActivityResult
 import androidx.activity.invoke
+import androidx.activity.registerForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts.*
@@ -18,12 +18,14 @@ import androidx.appcompat.app.AppCompatActivity
 
 class ActivityResultSampleActivity : AppCompatActivity() {
 
-    val requestActivity = registerForActivityResult(StartActivityForResult()) { activityResult ->
+    val requestActivity = registerForActivityResult(
+        StartActivityForResult()
+    ) { activityResult ->
         toast(activityResult.prettyString)
     }
 
-    val requestSecondVanilla =
-        registerForActivityResult(object : ActivityResultContract<Void, ActivityResult>() {
+    val requestSecondVanilla = registerForActivityResult(
+        object : ActivityResultContract<Void, ActivityResult>() {
             override fun createIntent(context: Context, input: Void?): Intent {
                 return Intent(context, ResultSecondActivity::class.java)
             }
@@ -33,44 +35,53 @@ class ActivityResultSampleActivity : AppCompatActivity() {
                 return ActivityResult(resultCode, intent)
             }
         }) { activityResult ->
-            toast(activityResult.prettyString)
-        }
+        toast(activityResult.prettyString)
+    }
 
-    val secondCustom = registerForActivityResult(object : ActivityResultContract<Void, SecondResult?>() {
-        override fun createIntent(context: Context, input: Void?): Intent {
-            return Intent(context, ResultSecondActivity::class.java)
-        }
-
-        @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-        override fun parseResult(resultCode: Int, intent: Intent?): SecondResult? {
-            return if (resultCode == Activity.RESULT_OK && intent != null) {
-                SecondResult(
-                    typeString = intent.getStringExtra("typeString"),
-                    typeInt = intent.getIntExtra("typeInt", 0)
-                )
-            } else {
-                null
+    val secondCustom = registerForActivityResult(
+        object : ActivityResultContract<Void, SecondResult?>() {
+            override fun createIntent(context: Context, input: Void?): Intent {
+                return Intent(context, ResultSecondActivity::class.java)
             }
-        }
-    }) { result: SecondResult? ->
+
+            @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+            override fun parseResult(resultCode: Int, intent: Intent?): SecondResult? {
+                return if (resultCode == Activity.RESULT_OK && intent != null) {
+                    SecondResult(
+                        typeString = intent.getStringExtra("typeString"),
+                        typeInt = intent.getIntExtra("typeInt", 0)
+                    )
+                } else {
+                    null
+                }
+            }
+        }) { result: SecondResult? ->
         if (result != null) {
             toast(result.toString())
         }
     }
 
-    val requestPermission = registerForActivityResult(RequestPermission()) { isGranted ->
+    val requestPermission = registerForActivityResult(
+        RequestPermission()
+    ) { isGranted ->
         toast("Location granted: $isGranted")
     }
 
-    val requestLocation = registerForActivityResult(RequestPermission(), ACCESS_FINE_LOCATION) { isGranted ->
+    val requestLocation = registerForActivityResult(
+        RequestPermission(), ACCESS_FINE_LOCATION
+    ) { isGranted ->
         toast("Location granted: $isGranted")
     }
 
-    val takePicture = registerForActivityResult(TakePicturePreview()) { bitmap ->
+    val takePicture = registerForActivityResult(
+        TakePicturePreview()
+    ) { bitmap ->
         toast("Got picture: $bitmap")
     }
 
-    val getContent = registerForActivityResult(GetContent()) { uri ->
+    val getContent = registerForActivityResult(
+        GetContent()
+    ) { uri ->
         toast("Got image: $uri")
     }
 
