@@ -49,7 +49,7 @@ class ActivityResultSampleFragment : Fragment() {
                 text("Here is Fragment")
                 button("Show second Activity", color = 0xFFC5CAE9.toInt()) {
                     val intent = Intent(context, ResultSecondActivity::class.java)
-                    requestActivity.launch(intent)
+                    requestActivity(intent)
                 }
                 button("Request location permission") {
                     requestLocation()
