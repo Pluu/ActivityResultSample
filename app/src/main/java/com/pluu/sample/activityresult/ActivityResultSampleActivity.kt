@@ -48,8 +48,8 @@ class ActivityResultSampleActivity : AppCompatActivity() {
             override fun parseResult(resultCode: Int, intent: Intent?): SecondResult? {
                 return if (resultCode == Activity.RESULT_OK && intent != null) {
                     SecondResult(
-                        typeString = intent.getStringExtra("typeString"),
-                        typeInt = intent.getIntExtra("typeInt", 0)
+                        typeString = intent.getStringExtra(ResultSecondActivity.key_string_case),
+                        typeInt = intent.getIntExtra(ResultSecondActivity.key_int_case, 0)
                     )
                 } else {
                     null

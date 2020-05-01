@@ -18,8 +18,8 @@ class ResultSecondActivity : AppCompatActivity() {
                     val result = Intent().apply {
                         putExtras(
                             bundleOf(
-                                "typeString" to "ABCD",
-                                "typeInt" to 1
+                                key_string_case to "ABCD",
+                                key_int_case to 1
                             )
                         )
                     }
@@ -28,5 +28,10 @@ class ResultSecondActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    companion object {
+        const val key_string_case = "typeString"
+        const val key_int_case = "typeInt"
     }
 }

@@ -1,6 +1,7 @@
 package com.pluu.sample.activityresult
 
 import android.app.Activity
+import android.os.Bundle
 import androidx.activity.result.ActivityResult
 
 inline val ActivityResult.prettyString: String
@@ -12,14 +13,14 @@ inline val ActivityResult.prettyString: String
         }
         append("ResultCode: $resultString")
 
-        val data = data?.extras?.let { bundle ->
-            bundle.keySet()
-                .map { it to bundle.get(it) }
-                .joinToString()
-        }.orEmpty()
-
+        val data = data?.extras?.prettyString.orEmpty()
         if (data.isNotEmpty()) {
             append(System.lineSeparator())
             append("Extra: $data")
         }
     }
+
+inline val Bundle.prettyString: String
+    get() = keySet()
+        .map { it to get(it) }
+        .joinToString()
