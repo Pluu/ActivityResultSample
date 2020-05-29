@@ -9,11 +9,11 @@ import android.os.Bundle
 import android.provider.Settings
 import android.widget.LinearLayout
 import android.widget.LinearLayout.VERTICAL
-import androidx.activity.invoke
-import androidx.activity.registerForActivityResult
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts.*
+import androidx.activity.result.launch
+import androidx.activity.result.registerForActivityResult
 import androidx.appcompat.app.AppCompatActivity
 
 class ActivityResultSampleActivity : AppCompatActivity() {
@@ -25,8 +25,8 @@ class ActivityResultSampleActivity : AppCompatActivity() {
     }
 
     val requestSecondVanilla = registerForActivityResult(
-        object : ActivityResultContract<Void, ActivityResult>() {
-            override fun createIntent(context: Context, input: Void?): Intent {
+        object : ActivityResultContract<Unit, ActivityResult>() {
+            override fun createIntent(context: Context, input: Unit?): Intent {
                 return Intent(context, ResultSecondActivity::class.java)
             }
 
@@ -39,8 +39,8 @@ class ActivityResultSampleActivity : AppCompatActivity() {
     }
 
     val secondCustom = registerForActivityResult(
-        object : ActivityResultContract<Void, SecondResult?>() {
-            override fun createIntent(context: Context, input: Void?): Intent {
+        object : ActivityResultContract<Unit, SecondResult?>() {
+            override fun createIntent(context: Context, input: Unit?): Intent {
                 return Intent(context, ResultSecondActivity::class.java)
             }
 
@@ -73,7 +73,7 @@ class ActivityResultSampleActivity : AppCompatActivity() {
         toast("Location granted: $isGranted")
     }
 
-    val takePicture = registerForActivityResult(
+    val takePicturePreview = registerForActivityResult(
         TakePicturePreview()
     ) { bitmap ->
         toast("Got picture: $bitmap")
@@ -94,35 +94,35 @@ class ActivityResultSampleActivity : AppCompatActivity() {
                 orientation = VERTICAL
                 button("Show second Activity") {
                     val intent = Intent(context, ResultSecondActivity::class.java)
-                    requestActivity(intent)
+                    requestActivity.launch(intent)
                 }
                 button("Show second Activity (Vanilla)") {
-                    requestSecondVanilla()
+                    requestSecondVanilla.launch()
                 }
                 button("Show second Activity (Custom Result)") {
-                    secondCustom()
+                    secondCustom.launch()
                 }
                 button("Request location permission") {
                     requestLocation()
                 }
                 button("Request location permission (Vanilla)") {
-                    requestPermission(ACCESS_FINE_LOCATION)
+                    requestPermission.launch(ACCESS_FINE_LOCATION)
                 }
                 button("Take pic") {
-                    takePicture()
+                    takePicturePreview.launch()
                 }
                 button("Pick an image") {
-                    getContent("image/*")
+                    getContent.launch("image/*")
                 }
                 button("Show fragment Sample", color = 0xFF81D4FA.toInt()) {
                     val intent = Intent(context, ActivityResultSampleFragmentActivity::class.java)
-                    requestActivity(intent)
+                    requestActivity.launch(intent)
                 }
                 button("Go Detail Setting", color = 0xFF81D4FA.toInt()) {
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                         data = Uri.fromParts("package", packageName, null)
                     }
-                    requestActivity(intent)
+                    requestActivity.launch(intent)
                 }
             }
         }

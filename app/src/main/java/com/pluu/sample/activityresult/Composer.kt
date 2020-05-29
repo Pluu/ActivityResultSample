@@ -2,6 +2,7 @@ package com.pluu.sample.activityresult
 
 import android.app.Activity
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,6 @@ import android.view.ViewManager
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 
 fun Context.toast(msg: String) {
@@ -74,13 +74,11 @@ fun ViewManager.text(txt: String) {
 }
 
 fun ViewManager.button(txt: String, color: Int = Color.LTGRAY, listener: (View) -> Unit) {
-    add(::Button) {
+    add({ Button(context, null, R.attr.buttonStyle) }) {
         text = txt
         transformationMethod = null
 
-        val bgDrawable = DrawableCompat.wrap(background)
-        DrawableCompat.setTint(bgDrawable, color)
-//        backgroundTintMode = ColorStateList.valueOf(color)
+        backgroundTintList = ColorStateList.valueOf(color)
         setOnClickListener(listener)
     }
 }

@@ -8,10 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import androidx.activity.invoke
-import androidx.activity.registerForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import androidx.activity.result.registerForActivityResult
 import androidx.fragment.app.Fragment
 
 class ActivityResultSampleFragment : Fragment() {
@@ -49,13 +48,13 @@ class ActivityResultSampleFragment : Fragment() {
                 text("Here is Fragment")
                 button("Show second Activity", color = 0xFFC5CAE9.toInt()) {
                     val intent = Intent(context, ResultSecondActivity::class.java)
-                    requestActivity(intent)
+                    requestActivity.launch(intent)
                 }
                 button("Request location permission") {
                     requestLocation()
                 }
                 button("Request location permission (Vanilla)") {
-                    requestPermission(ACCESS_FINE_LOCATION)
+                    requestPermission.launch(ACCESS_FINE_LOCATION)
                 }
             }
         }
