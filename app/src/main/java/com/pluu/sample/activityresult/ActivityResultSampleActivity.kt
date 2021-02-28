@@ -18,13 +18,13 @@ import androidx.appcompat.app.AppCompatActivity
 
 class ActivityResultSampleActivity : AppCompatActivity() {
 
-    val requestActivity = registerForActivityResult(
+    private val requestActivity = registerForActivityResult(
         StartActivityForResult()
     ) { activityResult ->
         toast(activityResult.prettyString)
     }
 
-    val requestSecondVanilla = registerForActivityResult(
+    private val requestSecondVanilla = registerForActivityResult(
         object : ActivityResultContract<Unit, ActivityResult>() {
             override fun createIntent(context: Context, input: Unit?): Intent {
                 return Intent(context, ResultSecondActivity::class.java)
@@ -38,7 +38,7 @@ class ActivityResultSampleActivity : AppCompatActivity() {
         toast(activityResult.prettyString)
     }
 
-    val secondCustom = registerForActivityResult(
+    private val secondCustom = registerForActivityResult(
         object : ActivityResultContract<Unit, SecondResult?>() {
             override fun createIntent(context: Context, input: Unit?): Intent {
                 return Intent(context, ResultSecondActivity::class.java)
@@ -48,7 +48,7 @@ class ActivityResultSampleActivity : AppCompatActivity() {
             override fun parseResult(resultCode: Int, intent: Intent?): SecondResult? {
                 return if (resultCode == Activity.RESULT_OK && intent != null) {
                     SecondResult(
-                        typeString = intent.getStringExtra(ResultSecondActivity.key_string_case),
+                        typeString = intent.getStringExtra(ResultSecondActivity.key_string_case)!!,
                         typeInt = intent.getIntExtra(ResultSecondActivity.key_int_case, 0)
                     )
                 } else {
@@ -61,25 +61,25 @@ class ActivityResultSampleActivity : AppCompatActivity() {
         }
     }
 
-    val requestPermission = registerForActivityResult(
+    private val requestPermission = registerForActivityResult(
         RequestPermission()
     ) { isGranted ->
         toast("Location granted: $isGranted")
     }
 
-    val requestLocation = registerForActivityResult(
+    private val requestLocation = registerForActivityResult(
         RequestPermission(), ACCESS_FINE_LOCATION
     ) { isGranted ->
         toast("Location granted: $isGranted")
     }
 
-    val takePicturePreview = registerForActivityResult(
+    private val takePicturePreview = registerForActivityResult(
         TakePicturePreview()
     ) { bitmap ->
         toast("Got picture: $bitmap")
     }
 
-    val getContent = registerForActivityResult(
+    private val getContent = registerForActivityResult(
         GetContent()
     ) { uri ->
         toast("Got image: $uri")
@@ -103,7 +103,7 @@ class ActivityResultSampleActivity : AppCompatActivity() {
                     secondCustom.launch()
                 }
                 button("Request location permission") {
-                    requestLocation()
+                    requestLocation.launch()
                 }
                 button("Request location permission (Vanilla)") {
                     requestPermission.launch(ACCESS_FINE_LOCATION)
